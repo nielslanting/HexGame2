@@ -1,4 +1,4 @@
-﻿  HexBoard.cpp
-c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\hexboard.cpp(171): warning C4018: '>': signed/unsigned mismatch
+﻿  Bot.cpp
+c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\bot.cpp(28): warning C4018: '<': signed/unsigned mismatch
   HexGame2.vcxproj -> C:\Users\Niels\documents\visual studio 2015\Projects\HexGame2\Debug\HexGame2.exe
   HexGame2.vcxproj -> C:\Users\Niels\documents\visual studio 2015\Projects\HexGame2\Debug\HexGame2.pdb (Full PDB)

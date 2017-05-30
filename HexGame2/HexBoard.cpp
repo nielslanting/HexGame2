@@ -41,8 +41,7 @@ void HexBoard::draw()
 				std::cout << ' ';
 				continue;
 			}
-
-			
+	
 			switch (Board[(y * Dimension) + x])
 			{
 				case 0: std::cout << '.'; break;
@@ -61,11 +60,13 @@ void HexBoard::draw()
 		}
 	}
 	
+	// Reset the color
+	SetConsoleTextAttribute(hConsole, 7);
 
 	std::cout << std::endl;
 }
 
-std::vector<short> HexBoard::getAvailableMoves()
+std::vector<short> HexBoard::getAvailableMoves() const
 {
 	std::vector<short> available;
 	for (int i = 0; i < Dimension*Dimension; i++)
@@ -79,10 +80,10 @@ std::vector<short> HexBoard::getAvailableMoves()
 	return available;
 }
 
-void HexBoard::fillBoardRandom()
+void HexBoard::fillBoardRandom(bool rawTurn)
 {
+	bool turn = rawTurn || false;
 	std::vector<short> available = getAvailableMoves();
-	bool turn = false;
 	while (!available.empty())
 	{
 		turn = !turn;

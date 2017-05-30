@@ -73,8 +73,16 @@ bool HexGame::input(const std::string &input)
 
 	// Let the BOT make a move
 	else if (input == "BOT") {
-		std::cout << "BEEP BOOP";
-		executed = true;
+		Bot* bot = new Bot();
+		int player = Turn ? 1 : 2;
+		int move = bot->calculateBestPosition(*Board, player);
+
+		Board->makeMove(player, move);
+		Turn = !Turn;
+
+		delete bot;
+
+		executed = true;	
 	}
 
 	// Let the BOT make a move

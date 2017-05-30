@@ -1,9 +1,9 @@
 #pragma once
-#include "HexBoard.h"
 #include <stdexcept>
 #include <regex>
 #include <sstream>
-
+#include "HexBoard.h"
+#include "Bot.h"
 
 class HexGame
 {

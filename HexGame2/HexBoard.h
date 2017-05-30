@@ -19,8 +19,8 @@ public:
 	~HexBoard(void);
 
 	void HexBoard::draw();
-	std::vector<short> HexBoard::getAvailableMoves();
-	void HexBoard::fillBoardRandom();
+	std::vector<short> HexBoard::getAvailableMoves() const;
+	void HexBoard::fillBoardRandom(bool turn = false);
 	bool HexBoard::makeMove(short player, int position);
 	bool HexBoard::makeMove(short player, std::string move);
 	bool HexBoard::invert();
