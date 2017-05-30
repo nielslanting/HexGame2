@@ -15,8 +15,8 @@ public:
 class Main
 {
 private:
-	std::vector<Memento*> UndoQueue;
-	std::vector<Memento*> RedoQueue;
+	std::vector<HexGame*> UndoQueue;
+	std::vector<HexGame*> RedoQueue;
 public:
 	Main();
 	~Main();

@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 /* Entrypoint */
 int main() {
 	new Main();
@@ -33,8 +32,7 @@ Main::Main()
 	HexGame* hexGame = new HexGame(11, start, pieRule);
 
 	// Push the initial state
-	Memento* mem = new Memento(new HexGame(*hexGame));
-	UndoQueue.push_back(mem);
+	UndoQueue.push_back(new HexGame(*hexGame));
 
 	std::string input = "";	
 	while (input != "QUIT") {
@@ -47,25 +45,24 @@ Main::Main()
 		if (input == "UNDO" ) {
 			if (UndoQueue.size() >= 2) {
 				// Pop last value from the queue
-				Memento* last = UndoQueue.back();
+				HexGame* last = UndoQueue.back();
 				UndoQueue.pop_back();
 				RedoQueue.push_back(last);
 
 				// Add it to the redo queue
-				Memento* mem = UndoQueue.back();
-				hexGame = mem->getState();
+				hexGame = UndoQueue.back();
 			}
 		}
 		else if (input == "REDO") {
 			if (RedoQueue.size() >= 1) {
 				// Pop last value from the queue
-				Memento* mem = RedoQueue.back();
+				HexGame* mem = RedoQueue.back();
 				RedoQueue.pop_back();
 
 				// Add it to the undo queue
 				UndoQueue.push_back(mem);
 
-				hexGame = mem->getState();
+				hexGame = mem;
 			}
 		}
 		else
@@ -73,8 +70,7 @@ Main::Main()
 			// Send the input to the Game Instance
 			if (hexGame->input(input)) {
 				// Save the state
-				Memento* mem = new Memento(new HexGame(*hexGame));
-				UndoQueue.push_back(mem);
+				UndoQueue.push_back(new HexGame(*hexGame));
 			}
 		}
 

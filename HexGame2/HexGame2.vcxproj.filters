@@ -30,9 +30,6 @@
     <ClInclude Include="PieRuleCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Memento.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -45,9 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PieRuleCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Memento.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
