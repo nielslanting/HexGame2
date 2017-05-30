@@ -113,5 +113,12 @@ bool HexBoard::makeMove(short player, std::string move)
 
 bool HexBoard::invert()
 {
-	return false;
+	for (std::vector<short>::iterator it = Board.begin(); it != Board.end(); ++it)
+	{
+		if (*it == 2) *it = 1;
+		else if (*it == 1) *it = 2;
+	}
+
+	return true;
 }
+

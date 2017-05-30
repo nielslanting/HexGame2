@@ -3,6 +3,8 @@
 #include <string>
 #include <algorithm>
 #include <fcntl.h>
+#include "Memento.h"
+
 class main
 {
 public:
@@ -12,6 +14,9 @@ public:
 
 class Main
 {
+private:
+	std::vector<Memento*> UndoQueue;
+	std::vector<Memento*> RedoQueue;
 public:
 	Main();
 	~Main();

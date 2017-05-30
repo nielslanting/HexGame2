@@ -4,6 +4,7 @@
 #include <regex>
 #include <sstream>
 
+
 class HexGame
 {
 public:
@@ -12,12 +13,15 @@ public:
 	int Dimension;
 	HexBoard* Board;
 
+	HexGame::HexGame(const HexGame& other);
 	HexGame(int dimension);
 	HexGame(int dimension, bool turn, bool pieRule);
 	~HexGame();
 
-	bool applyPieRule();
-	void draw();
-	void input(const std::string &input);
+	bool HexGame::applyPieRule();
+	void HexGame::draw();
+	bool HexGame::input(const std::string &input);
+	int HexGame::calculateWinner();
+	bool HexGame::hasWon(int currentPosition, int player, int min, int max, std::map<int, bool> &visited);
 };
 
