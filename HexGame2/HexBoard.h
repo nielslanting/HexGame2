@@ -6,6 +6,7 @@
 #include <time.h>
 #include <algorithm> 
 #include <vector>
+#include <windows.h>
 
 class HexBoard
 {
@@ -23,4 +24,6 @@ public:
 	bool HexBoard::makeMove(short player, int position);
 	bool HexBoard::makeMove(short player, std::string move);
 	bool HexBoard::invert();
+	int HexBoard::calculateWinner();
+	bool HexBoard::hasWon(int currentPosition, int player, int min, int max, std::map<int, bool> &visited);
 };

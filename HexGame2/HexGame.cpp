@@ -77,6 +77,12 @@ bool HexGame::input(const std::string &input)
 		executed = true;
 	}
 
+	// Let the BOT make a move
+	else if (input == "RANDOM") {
+		Board->fillBoardRandom();
+		executed = true;
+	}
+
 	// Default move
 	else if (std::regex_match(input, std::regex("[a-zA-Z][0-9]")) || 
 		std::regex_match(input, std::regex("[0-9][a-zA-Z]"))){
@@ -103,64 +109,9 @@ bool HexGame::input(const std::string &input)
 		executed = true;
 	}
 
-	this->calculateWinner();
+	this->Board->calculateWinner();
 
 	return executed;
 }
 
-int HexGame::calculateWinner()
-{
-	std::map<int, bool> visited = std::map<int, bool>();
 
-	// Vertical(red) check
-	for (int i = 0; i < Dimension; i++) {
-		// Skip starting positions that aren't red
-		if (Board->Board[i] != 1) continue;
-
-		// Skip positions we have visited in previous itterations
-		if (visited.find(i) != visited.end()) continue;
-
-		bool redWon = hasWon(i, 1, (Dimension*Dimension) - Dimension, (Dimension*Dimension), visited);
-
-		if (redWon) return 1;
-	}
-
-	return 0;
-}
-
-bool HexGame::hasWon(int currentPosition, int player, int min, int max, std::map<int, bool> &visited)
-{
-	// TODO: Do conditionals before calling the function, reducing stackframes
-	// We already checked this node
-	if (visited.find(currentPosition) != visited.end()) return false;
-	else visited[currentPosition] = true;
-
-	// Check if the position is within the bounds of the vector
-	if (currentPosition < 0 && currentPosition > Board->Board.size()) return false;
-
-	// Check if its the player's node
-	if (Board->Board[currentPosition] != player) return false;
-
-	// We are in the position we looked for
-	if (currentPosition >= min && currentPosition <= max) {
-		return true;
-	}
-
-	// Calculate the positions of other nodes
-	int top1 = currentPosition - Dimension;
-	int top2 = currentPosition - Dimension + 1;
-	int left = currentPosition - 1;
-	int right = currentPosition + 1;
-	int bottom1 = currentPosition + Dimension - 1;
-	int bottom2 = currentPosition + Dimension;
-
-	// Check if the position contains the correct player
-	if (hasWon(top1, player, min, max, visited)) return true;
-	if (hasWon(top2, player, min, max, visited)) return true;
-	if (hasWon(left, player, min, max, visited)) return true;
-	if (hasWon(right, player, min, max, visited)) return true;
-	if (hasWon(bottom1, player, min, max, visited)) return true;
-	if (hasWon(bottom2, player, min, max, visited)) return true;
-
- 	return false;
-}

@@ -21,7 +21,5 @@ public:
 	bool HexGame::applyPieRule();
 	void HexGame::draw();
 	bool HexGame::input(const std::string &input);
-	int HexGame::calculateWinner();
-	bool HexGame::hasWon(int currentPosition, int player, int min, int max, std::map<int, bool> &visited);
 };
 
