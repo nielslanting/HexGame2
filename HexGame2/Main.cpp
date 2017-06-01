@@ -29,7 +29,7 @@ Main::Main()
 	bool pieRule = pieRuleInput == "N" ? false : true;
 
 	// Create the board
-	HexGame* hexGame = new HexGame(5, start, pieRule);
+	HexGame* hexGame = new HexGame(11, start, pieRule);
 
 	// Push the initial state
 	UndoQueue.push_back(new HexGame(*hexGame));
