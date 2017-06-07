@@ -24,12 +24,6 @@
     <ClInclude Include="HexBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ICommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PieRuleCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,9 +36,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HexBoard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PieRuleCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bot.cpp">

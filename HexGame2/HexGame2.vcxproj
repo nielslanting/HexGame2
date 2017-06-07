@@ -22,16 +22,13 @@
     <ClInclude Include="Bot.h" />
     <ClInclude Include="HexBoard.h" />
     <ClInclude Include="HexGame.h" />
-    <ClInclude Include="ICommand.h" />
     <ClInclude Include="Main.h" />
-    <ClInclude Include="PieRuleCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bot.cpp" />
     <ClCompile Include="HexBoard.cpp" />
     <ClCompile Include="HexGame.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="PieRuleCommand.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1F5C6BE6-F49E-4268-AA24-CA015E4BA812}</ProjectGuid>

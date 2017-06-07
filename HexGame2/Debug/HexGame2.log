@@ -1,8 +1,3 @@
-﻿  Bot.cpp
-c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\bot.cpp(25): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
-c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\bot.cpp(30): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
-c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\bot.cpp(46): warning C4018: '<': signed/unsigned mismatch
-c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\bot.cpp(61): warning C4018: '<': signed/unsigned mismatch
-c:\users\niels\documents\visual studio 2015\projects\hexgame2\hexgame2\bot.cpp(106): warning C4018: '<': signed/unsigned mismatch
+﻿  HexGame.cpp
   HexGame2.vcxproj -> C:\Users\Niels\documents\visual studio 2015\Projects\HexGame2\Debug\HexGame2.exe
   HexGame2.vcxproj -> C:\Users\Niels\documents\visual studio 2015\Projects\HexGame2\Debug\HexGame2.pdb (Full PDB)

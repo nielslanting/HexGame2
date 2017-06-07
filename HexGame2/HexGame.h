@@ -12,6 +12,7 @@ public:
 	bool PieRuleUsed = false;
 	int Dimension;
 	HexBoard* Board;
+	Bot* Robot;
 
 	HexGame::HexGame(const HexGame& other);
 	HexGame(int dimension);

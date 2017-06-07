@@ -11,115 +11,99 @@ Bot::~Bot()
 {
 }
 
-int Bot::calculateBestPosition(const HexBoard& hexBoard, int player) const
+int Bot::calculateBestPosition(const HexBoard& hexBoard, short player) const
 {
 	std::cout << "Calculating move..." << std::endl;
 	std::cout << "Running on: " << ConcurentThreadsSupported << " threads." << std::endl;
 
-	std::vector<short> availableMoves = hexBoard.getAvailableMoves();
+	std::vector<short> available = hexBoard.getAvailableMoves();
 
 	// Store the results
-	std::vector<int> wins(hexBoard.Board.size(), 0);
-	std::vector<std::vector<HexBoard*>>boards(ConcurentThreadsSupported);
+	std::vector<int> wins(available.size(), 0);
 
-	unsigned boardsPerThread = floor(availableMoves.size() / ConcurentThreadsSupported);
-	// unsigned boardsForLastThread = availableMoves.size() - (boardsPerThread * (ConcurentThreadsSupported - 1));
-
-	// Create a board for each posible move, and set the available move
-	for (std::size_t i = 0; i != availableMoves.size(); i++) {
-		unsigned section = floor(i / boardsPerThread);
-
-		if (section >= ConcurentThreadsSupported) section--;
-
-		HexBoard* newBoard = new HexBoard(hexBoard);
-		newBoard->makeMove(player, availableMoves[i]);
-
-		boards[section].push_back(newBoard);
-	}
-
-	// Monte carlo
 	std::clock_t begin = clock();
+	std::vector<std::future<MonteResult>> results;
 
-	// Multi-threaded
-	std::vector<std::future<std::vector<int>>> results;
-
-	for (int c = 0; c < boards.size(); c++) {
-		std::vector<HexBoard*> splitBoard = boards[c];
-
-		results.push_back(std::async(std::launch::async, &Bot::monteCarlo, this, splitBoard, boardsPerThread, player, c, wins.size()));
+	for (auto i = 0; i < ConcurentThreadsSupported; i++) {
+		results.push_back(std::async(std::launch::async, &Bot::monteCarlo, this, hexBoard, available, player, Strength));			
 	}
 
 	// Merge the results
+	int sum = 0;
+
 	for (auto&& future : results) {
-		std::vector<int> result = future.get();	
+		MonteResult result = future.get();
 
-		int lsum = 0;
-		for (auto& n : result)
-			lsum += n;
-
-		std::cout << "Result size: " << result.size() << " | sum: " << lsum << std::endl;
-		for (auto i = 0; i < result.size(); i++) {
-			wins[i] += result[i];
+		sum += result.count;
+		for (auto i = 0; i < result.wins.size(); i++) {
+			wins[i] += result.wins[i];
 		}
 	}
-
-	// Single-threaded
-	/*for (int c = 0; c < boards.size(); c++) {
-		std::vector<HexBoard*> splitBoard = boards[c];
-		
-		std::vector<int> result = monteCarlo(splitBoard, boardsPerThread, player, c, wins.size());
-
-		int lsum = 0;
-		for (auto& n : result)
-			lsum += n;
-
-		std::cout << "Result size: " << result.size() << " | sum: " << lsum << std::endl;
-		for (auto i = 0; i < result.size(); i++) {
-			wins[i] += result[i];
-		}
-	}*/
 
 	clock_t end = clock();
 	double diff = double(end - begin) / CLOCKS_PER_SEC;
+	double timePerCalculation = (diff / sum) * 1000;
+	double calculationsPerMs = sum / (diff * 1000);
 
 	std::cout << "Calculation time: " << diff << std::endl;
-
-	int sum = 0;
-	for (auto& n : wins)
-		sum += n;
-
 	std::cout << "Calculations done: " << sum << std::endl;
-
-	double timePerCalculation = (diff / sum) * 1000;
-
 	std::cout << "Time per calculation: " << timePerCalculation << " ms" << std::endl;
+	std::cout << "Calculations per ms: " << calculationsPerMs << std::endl;
 
 	int pos = std::distance(wins.begin(), std::max_element(wins.begin(), wins.end()));
 
-	return availableMoves.at(pos);
+	std::cout << "Position: " << pos << std::endl;
+
+	return available.at(pos);
 }
 
-std::vector<int> Bot::monteCarlo(const std::vector<HexBoard*>& board, unsigned boardsPerThread, int player, int c, int winSize) const
+MonteResult Bot::monteCarlo(const HexBoard& board, std::vector<short> available, short player, int timeout) const
 {
-	std::vector<int> wins(winSize, 0);
+	int counter = 0;
 
-	for (int i = 0; i < board.size(); i++) {
-		for (int j = 0; j < 30; j++) {
-			HexBoard* newBoard = new HexBoard(*board[i]);
-			newBoard->fillBoardRandom();
+	auto begin_time = std::chrono::high_resolution_clock::now();
 
-			auto winner = newBoard->calculateWinner();
+	std::vector<int> wins(available.size(), 0);
+
+	while (true) {
+
+
+		// Check the elapsed time
+		auto current_time = std::chrono::high_resolution_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - begin_time).count();
+		if (elapsed > timeout) {
+			break;
+		}
+
+		for (auto i = 0; i < available.size(); i++) {
+			HexBoard newBoard(board);
+			newBoard.makeMove(player, available[i]);
+			newBoard.fillBoardRandom();
+
+			auto winner = newBoard.calculateWinner();
 
 			if (player == 1) {
-				if (winner) wins[(c * boardsPerThread) + i]++;
-				else if (!winner) wins[(c * boardsPerThread) + i]--;
+				if (winner) wins[i]++;
+				else wins[i]--;
 			}
 			else {
-				if (!winner) wins[(c * boardsPerThread) + i]++;
-				else if (winner) wins[(c * boardsPerThread) + i]--;
+				if (!winner) wins[i]++;
+				else wins[i]--;
 			}
+
+			counter++;
 		}
 	}
 
-	return wins;
+	MonteResult result;
+	result.count = counter;
+	result.wins = wins;
+
+	return result;
 }
+
+void Bot::setStrength(unsigned strength)
+{
+	Strength = strength;
+}
+

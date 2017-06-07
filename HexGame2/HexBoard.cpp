@@ -156,7 +156,6 @@ int HexBoard::calculateWinner()
 
 bool HexBoard::hasWon(int currentPosition, int player, int min, int max, std::map<int, bool> &visited)
 {
-	// TODO: Do conditionals before calling the function, reducing stackframes
 	// We already checked this node
 	if (visited.find(currentPosition) != visited.end()) return false;
 	else visited[currentPosition] = true;

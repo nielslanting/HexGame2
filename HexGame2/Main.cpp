@@ -39,6 +39,17 @@ Main::Main()
 		// Clear the screen
 		system("cls");
 
+		std::cout << "HexGame by Niels Lanting" << std::endl;
+		std::cout << "Commands: " << std::endl;
+		std::cout << "- UNDO: Undos the previous command." << std::endl;
+		std::cout << "- REDO: Redos the previous command." << std::endl;
+		std::cout << "- RANDOM: Fills the board randomly." << std::endl;
+		std::cout << "- PIE: Applies pie rule." << std::endl;
+		std::cout << "- BOT: A bot will make a move." << std::endl;
+		std::cout << "- STRENGTH {number}: How long the bot can calculate(in ms)." << std::endl;
+		std::cout << "- {row}{column}: (Example A1) Places a stone." << std::endl;
+		std::cout << std::endl;
+
 		std::cout << "Last input: ";
 		std::cout << input << std::endl;
 
@@ -78,7 +89,7 @@ Main::Main()
 		hexGame->draw();
 
 		// Get the new input and set it to uppercase
-		std::cin >> input;
+		std::getline(std::cin, input);
 		std::transform(input.begin(), input.end(), input.begin(), ::toupper);	
 	}
 

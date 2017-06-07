@@ -3,27 +3,29 @@
 
 HexGame::HexGame(const HexGame& other)
 {
-	// deep copy
+	// Deep copy
 	Board = new HexBoard(*other.Board);
 
-	// shallow copy (they both point to same object)
+	// Shallow copy (they both point to same object)
 	Dimension = other.Dimension;
 	Turn = other.Turn;
 	PieRuleUsed = other.PieRuleUsed;
+	Robot = other.Robot;
 }
 
 
-HexGame::HexGame(int dimension) : Dimension(dimension), Board(new HexBoard(dimension))
+HexGame::HexGame(int dimension) : Dimension(dimension), Board(new HexBoard(dimension)), Robot(new Bot())
 {
 }
 
-HexGame::HexGame(int dimension, bool turn, bool pieRule) : Dimension(dimension), Turn(turn), PieRuleUsed(!pieRule), Board(new HexBoard(dimension))
+HexGame::HexGame(int dimension, bool turn, bool pieRule) : Dimension(dimension), Turn(turn), PieRuleUsed(!pieRule), Board(new HexBoard(dimension)), Robot(new Bot())
 {
 }
 
 HexGame::~HexGame()
 {
 	delete Board;
+	delete Robot;
 }
 
 bool HexGame::applyPieRule() {
@@ -34,7 +36,7 @@ bool HexGame::applyPieRule() {
 	int emptyMoves = Board->getAvailableMoves().size();
 
 	// Pie rule is used but it's not the first turn anymore
-	if ((availableMoves - emptyMoves) > 1) return false;
+	if ((availableMoves - emptyMoves) != 1) return false;
 
 	Board->invert();
 	Turn = !Turn;
@@ -44,6 +46,7 @@ bool HexGame::applyPieRule() {
 }
 
 void HexGame::draw() {
+
 	std::cout << std::endl;
 
 	// Print the player who's turn it is
@@ -65,22 +68,21 @@ bool HexGame::input(const std::string &input)
 	// Apply pie rule, if we can't throw an exception
 	if (input == "PIE") {
 		if (!this->applyPieRule()) {
-			throw std::invalid_argument("Can't use pie rule");
+			std::cout << "Can't use pie rule." << std::endl;
 		}
-
-		executed = true;
+		else {
+			executed = true;
+		}
 	}
 
 	// Let the BOT make a move
 	else if (input == "BOT") {
-		Bot* bot = new Bot();
+		
 		int player = Turn ? 1 : 2;
-		int move = bot->calculateBestPosition(*Board, player);
+		int move = Robot->calculateBestPosition(*Board, player);
 
 		Board->makeMove(player, move);
 		Turn = !Turn;
-
-		delete bot;
 
 		executed = true;	
 	}
@@ -91,21 +93,35 @@ bool HexGame::input(const std::string &input)
 		executed = true;
 	}
 
+	// Set bot strength
+	else if (std::regex_match(input, std::regex("STRENGTH [0-9]+"))) {
+
+		// Calculate the strength
+		std::smatch strengthMatch;
+		std::regex_search(input, strengthMatch, std::regex("[0-9]+"));
+		std::string rawStrength = strengthMatch[0];
+		unsigned int strength = atoi(rawStrength.c_str()) - 1;
+
+		Robot->setStrength(strength);
+
+		std::cout << "Robot's strength is now: " << strength << " ms." << std::endl;
+	}
+
 	// Default move
-	else if (std::regex_match(input, std::regex("[a-zA-Z][0-9]")) || 
-		std::regex_match(input, std::regex("[0-9][a-zA-Z]"))){
+	else if (std::regex_match(input, std::regex("[a-zA-Z]+[0-9]+")) || 
+		std::regex_match(input, std::regex("[0-9]+[a-zA-Z]+"))){
 
 		// Calculate the column
 		std::smatch columnMatch;
-		std::regex_search(input, columnMatch, std::regex("[a-zA-Z]{1}"));
+		std::regex_search(input, columnMatch, std::regex("[a-zA-Z]+"));
 		std::string rawColumn = columnMatch[0];
 		unsigned int column = rawColumn.at(0) - 'A';
 
 		// Calculate the row
 		std::smatch rowMatch;
-		std::regex_search(input, rowMatch, std::regex("[0-9]"));
+		std::regex_search(input, rowMatch, std::regex("[0-9]+"));
 		std::string rawRow = rowMatch[0];
-		unsigned int row = atoi(rawRow.c_str()) - 1;
+		unsigned int row = atoi(rawRow.c_str());
 
 		// Calculate the move
 		unsigned int move = (column * Dimension) + row;
@@ -116,6 +132,7 @@ bool HexGame::input(const std::string &input)
 
 		executed = true;
 	}
+
 
 	this->Board->calculateWinner();
 
